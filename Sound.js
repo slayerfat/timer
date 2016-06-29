@@ -23,12 +23,12 @@ class Sound {
 
   _run(...args) {
     return new Promise((resolve, reject) => {
-      this.exec('paplay', args, {cwd: './'}, (error, stdOut, stdErr) => {
+      this.exec('paplay', args, {cwd: './'}, error => {
         if (error) {
           return reject(error);
         }
 
-        return resolve({success: true, args, stdOut, stdErr});
+        return resolve();
       });
     });
   }
