@@ -10,12 +10,14 @@ class Timer {
    *
    * @param {Object} sound
    * @param {Object} progress
+   * @param {Object} quote
    * @param {number} end
    * @param {number} start
    */
-  constructor({sound, progress, end, start = 0}) {
+  constructor({sound, progress, end, quote, start = 0}) {
     this.sound = sound;
     this.progress = progress;
+    this.quote = quote;
     this.startTime = start;
     this.goal = end;
     this.interval = SEC;
@@ -92,6 +94,7 @@ class Timer {
    * @private
    */
   _everyMin() {
+    this._tryToQuote();
     this._newBarTick();
   }
 
@@ -149,6 +152,18 @@ class Timer {
     const secs = test(date.getSeconds());
 
     return `[${hour}:${mins}:${secs}]`;
+  }
+
+  /**
+   * Will try to log a random quote.
+   *
+   * @private
+   */
+  _tryToQuote() {
+    const i = Math.random() * 0.6;
+    if (i >= 0.5) {
+      console.log(chalk.blue(`\n${this.quote.random()}\n`));
+    }
   }
 }
 
