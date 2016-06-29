@@ -1,7 +1,8 @@
 {
   "name": "timer",
   "version": "1.0.0",
-  "description": "Just a timer, plz ignore.",
+  "description": "Just a timer with sound. Un cronometro con sonido",
+  "author": "Alejandro Granadillo <slayerfat@gmail.com> (http://slayerfat.com.ve/)",
   "main": "main.js",
   "private": true,
   "license": "ISC",
