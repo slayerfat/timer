@@ -1,7 +1,5 @@
-require('log-timestamp');
 const chalk = require('chalk');
 
-const HALF = 18e5;
 const MIN = 6e4;
 const SEC = 1e3;
 
@@ -11,16 +9,30 @@ class Timer {
    * We need to know the sound object to use.
    *
    * @param {Object} sound
-   * @param {number} start
+   * @param {Object} progress
    * @param {number} end
+   * @param {number} start
    */
-  constructor({sound, start = 0, end = HALF}) {
+  constructor({sound, progress, end, start = 0}) {
     this.sound = sound;
+    this.progress = progress;
     this.startTime = start;
     this.goal = end;
     this.interval = SEC;
     this.intFunc = null;
     this._misc();
+  }
+
+  get minsLeft() {
+    return this.startTime / (this.interval * 60);
+  }
+
+  get msg() {
+    if (this.minsLeft <= 1) {
+      return `${Timer.time()} Ha pasado ${Math.ceil(this.minsLeft)} minuto.`;
+    }
+
+    return `${Timer.time()} Han pasado ${Math.ceil(this.minsLeft)} minutos.`;
   }
 
   /**
@@ -40,6 +52,9 @@ class Timer {
     }, this.interval);
   }
 
+  /**
+   * Stops the internal interval.
+   */
   stop() {
     clearInterval(this.intFunc);
   }
@@ -50,42 +65,90 @@ class Timer {
    */
   _exit() {
     const mins = (this.goal - this.startTime) / (60 * this.interval);
-    const msg = `Faltaron ${Math.ceil(mins)} minutos.`;
-    this.sound.error().catch(err => {
-      console.log(chalk.red(err));
-    });
+    const msg = `\n${Timer.time()} Faltaron ${Math.ceil(mins)} minutos.\n`;
 
+    this.sound.error().catch(Timer._handleError);
     console.log(chalk.red.underline.bold(msg));
 
     process.exit();
   }
 
+  /**
+   * Just the starting message and node sigterm hook.
+   *
+   * @private
+   */
   _misc() {
-    console.log(chalk.bgGreen(`Objetivo es: ${this.goal / (60 * this.interval)} minutos.`));
+    const msg = `${Timer.time()} Objetivo es: ${this.goal / (60 * this.interval)} minutos.`;
+    console.log(chalk.bgGreen(msg));
 
     process.on('SIGINT', this._exit.bind(this))
       .on('SIGTERM', this._exit.bind(this));
   }
 
+  /**
+   * Every time this is called a new progress bar tick is added.
+   *
+   * @private
+   */
   _everyMin() {
-    const mins = this.startTime / (this.interval * 60);
-    console.log(chalk.bgWhite(`Han pasado ${Math.ceil(mins)} minutos.`));
+    this._newBarTick();
   }
 
+  /**
+   * Every time this is called a new progress bar
+   * tick is added and also plays a sound.
+   *
+   * @private
+   */
   _everyTMin() {
-    const mins = this.startTime / (this.interval * 60);
-    console.log(chalk.bgWhite.bold(`Han pasado ${Math.ceil(mins)} minutos.`));
-    this.sound.warning().catch(err => {
-      console.log(chalk.red(err));
-    });
+    this._everyMin();
+    this.sound.warning().catch(Timer._handleError);
   }
 
   _done() {
-    console.log(chalk.bold.underline('OBJETIVO LOGRADO!'));
-    this.sound.info().catch(err => {
-      console.log(chalk.red(err));
-    });
+    console.log(chalk.bold.underline(`\n${Timer.time()} OBJETIVO LOGRADO!\n`));
+    this.sound.info().catch(Timer._handleError);
     this.stop();
+  }
+
+  /**
+   * Sets the progress bar with a message.
+   *
+   * @param {string=} msg optional message.
+   * @private
+   */
+  _newBarTick(msg) {
+    msg = msg || this.msg;
+    this.progress.tick(this.interval, {"msg": msg});
+  }
+
+  /**
+   * For now it just prints the error.
+   *
+   * @param err
+   * @private
+   */
+  static _handleError(err) {
+    console.log(chalk.red(err));
+  }
+
+  /**
+   * Gets the current formatted time.
+   *
+   * @returns {string} returns in [HH:mm:ss]
+   */
+  static time() {
+    const date = new Date();
+    let test = function (element) {
+      return element < 10 ? `0${element}` : element;
+    };
+
+    const hour = test(date.getHours());
+    const mins = test(date.getMinutes());
+    const secs = test(date.getSeconds());
+
+    return `[${hour}:${mins}:${secs}]`;
   }
 }
 
