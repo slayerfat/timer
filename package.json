@@ -2,7 +2,7 @@
   "name": "timer",
   "version": "1.0.0",
   "description": "Just a timer, plz ignore.",
-  "main": "timer.js",
+  "main": "main.js",
   "private": true,
   "license": "ISC",
   "dependencies": {
