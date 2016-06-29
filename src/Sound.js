@@ -1,20 +1,19 @@
-const execFile = require('child_process').execFile;
-
-// The location of the default sounds.
-const ERR = 'media/dialog-error.ogg';
-const WARN = 'media/dialog-information.ogg';
-const INFO = 'media/dialog-warning.ogg';
-
 class Sound {
 
   /**
    * We need to know which command to run.
    *
    * @param {string} command
+   * @param {string} execFile
    */
-  constructor(command) {
+  constructor({command, execFile}) {
     this.command = command;
     this.exec = execFile;
+
+    // The location of the default sounds.
+    this._ERR = 'media/dialog-error.ogg';
+    this._WARN = 'media/dialog-information.ogg';
+    this._INFO = 'media/dialog-warning.ogg';
   }
 
   /**
@@ -23,7 +22,7 @@ class Sound {
    * @returns {Promise}
    */
   info() {
-    return this._run(INFO);
+    return this._run(this._INFO);
   }
 
   /**
@@ -31,7 +30,7 @@ class Sound {
    * @returns {Promise}
    */
   warning() {
-    return this._run(WARN);
+    return this._run(this._WARN);
   }
 
   /**
@@ -40,7 +39,7 @@ class Sound {
    * @returns {Promise}
    */
   error() {
-    return this._run(ERR);
+    return this._run(this._ERR);
   }
 
   /**

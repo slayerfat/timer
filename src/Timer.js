@@ -48,7 +48,7 @@ class Timer {
    * When the user ends the process, we can
    * tell how many minutes were left.
    */
-  exit() {
+  _exit() {
     const mins = (this.goal - this.startTime) / (60 * this.interval);
     const msg = `Faltaron ${Math.ceil(mins)} minutos.`;
     this.sound.error().catch(err => {
@@ -63,8 +63,8 @@ class Timer {
   _misc() {
     console.log(chalk.bgGreen(`Objetivo es: ${this.goal / (60 * this.interval)} minutos.`));
 
-    process.on('SIGINT', this.exit.bind(this))
-      .on('SIGTERM', this.exit.bind(this));
+    process.on('SIGINT', this._exit.bind(this))
+      .on('SIGTERM', this._exit.bind(this));
   }
 
   _everyMin() {
