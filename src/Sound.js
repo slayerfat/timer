@@ -1,12 +1,13 @@
+const execFile = require('child_process').execFile;
+
 class Sound {
 
   /**
    * We need to know which command to run.
    *
    * @param {string} command
-   * @param {string} execFile
    */
-  constructor({command, execFile}) {
+  constructor({command}) {
     this.command = command;
     this.exec = execFile;
 
