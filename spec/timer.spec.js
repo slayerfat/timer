@@ -32,17 +32,17 @@ describe('Timer', function () {
   });
 
   describe('should tell me how many seconds have passed', function () {
-    it('should tell me at the start that 0 seconds have passed', function () {
+    it('should tell me at the start that 0 minutes have passed', function () {
       expect(timer.msg).toContain('Han pasado 0 minutos');
     });
 
-    it('should tell me 1 second have passed after 1 second', function () {
+    it('should tell me 1 minute have passed after 1 minute', function () {
       timer.startTime = MIN;
       jasmine.clock().tick(6e5);
       expect(timer.msg).toContain('Ha pasado 1 minuto');
     });
 
-    it('should tell me 1 second have passed after 1 second', function () {
+    it('should tell me 2 minute have passed after 2 minute', function () {
       timer.startTime = MIN * 2;
       expect(timer.msg).toContain('Han pasado 2 minutos');
     });
