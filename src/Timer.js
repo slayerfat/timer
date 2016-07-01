@@ -25,20 +25,20 @@ class Timer {
     this._misc();
   }
 
-  get minsLeft() {
+  get accumulatedMins() {
     return this.startTime / (this.interval * 60);
   }
 
   get msg() {
-    if (this.minsLeft === 1) {
-      return `${Timer.time()} Ha pasado ${Math.ceil(this.minsLeft)} minuto.`;
+    if (this.accumulatedMins === 1) {
+      return `${Timer.time()} Ha pasado ${Math.ceil(this.accumulatedMins)} minuto.`;
     }
 
-    return `${Timer.time()} Han pasado ${Math.ceil(this.minsLeft)} minutos.`;
+    return `${Timer.time()} Han pasado ${Math.ceil(this.accumulatedMins)} minutos.`;
   }
 
   get objective() {
-    if (this.minsLeft === 1) {
+    if (this.accumulatedMins === 1) {
       return `${Timer.time()} El objetivo es es de ${this.goal / (60 * this.interval)} minuto.`;
     }
 
