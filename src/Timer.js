@@ -132,7 +132,7 @@ class Timer {
    */
   _newBarTick(msg) {
     msg = msg || this.msg;
-    this.progress.tick(this.interval, {'msg': msg});
+    this.progress.tick(this.startTime, {'msg': msg});
   }
 
   /**
