@@ -1,6 +1,7 @@
 {
   "esversion": 6,
   "node": true,
+  "jasmine": true,
   "unused": true,
   "undef": true,
   "noempty": true,
@@ -10,5 +11,6 @@
   "bitwise": true,
   "curly": true,
   "nonew": true,
-  "forin": true
+  "forin": true,
+  "quotmark": "single"
 }

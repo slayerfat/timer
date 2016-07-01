@@ -8,14 +8,16 @@ class Timer {
   /**
    * We need to know the sound object to use.
    *
-   * @param {Object} sound
-   * @param {Object} progress
-   * @param {Object} quote
-   * @param {number} end
-   * @param {number} start
+   * @param {Object} options
+   * @param {Sound} options.sound
+   * @param {Object} options.progress
+   * @param {Quote} options.quote
+   * @param {number} options.end
+   * @param {number=} options.start
    */
-  constructor({sound, progress, end, quote, start = 0}) {
-    this.sound = sound;
+  constructor(options) {
+    const {progress, end, quote, start = 0} = options;
+    this.sound = options.sound;
     this.progress = progress;
     this.quote = quote;
     this.startTime = start;
@@ -30,11 +32,23 @@ class Timer {
   }
 
   get msg() {
-    if (this.minsLeft <= 1) {
+    if (this.minsLeft === 1) {
       return `${Timer.time()} Ha pasado ${Math.ceil(this.minsLeft)} minuto.`;
     }
 
     return `${Timer.time()} Han pasado ${Math.ceil(this.minsLeft)} minutos.`;
+  }
+
+  get objective() {
+    if (this.minsLeft === 1) {
+      return `${Timer.time()} El objetivo es es de ${this.goal / (60 * this.interval)} minuto.`;
+    }
+
+    return `${Timer.time()} El objetivo es es de ${this.goal / (60 * this.interval)} minutos.`;
+  }
+
+  logObjective() {
+    console.log(chalk.bgGreen(this.objective));
   }
 
   /**
@@ -81,9 +95,6 @@ class Timer {
    * @private
    */
   _misc() {
-    const msg = `${Timer.time()} Objetivo es: ${this.goal / (60 * this.interval)} minutos.`;
-    console.log(chalk.bgGreen(msg));
-
     process.on('SIGINT', this._exit.bind(this))
       .on('SIGTERM', this._exit.bind(this));
   }
@@ -123,7 +134,19 @@ class Timer {
    */
   _newBarTick(msg) {
     msg = msg || this.msg;
-    this.progress.tick(this.interval, {"msg": msg});
+    this.progress.tick(this.interval, {'msg': msg});
+  }
+
+  /**
+   * Will try to log a random quote.
+   *
+   * @private
+   */
+  _tryToQuote() {
+    const i = Math.random() * 0.6;
+    if (i >= 0.5) {
+      console.log(chalk.blue(`\n${this.quote.random()}\n`));
+    }
   }
 
   /**
@@ -152,18 +175,6 @@ class Timer {
     const secs = test(date.getSeconds());
 
     return `[${hour}:${mins}:${secs}]`;
-  }
-
-  /**
-   * Will try to log a random quote.
-   *
-   * @private
-   */
-  _tryToQuote() {
-    const i = Math.random() * 0.6;
-    if (i >= 0.5) {
-      console.log(chalk.blue(`\n${this.quote.random()}\n`));
-    }
   }
 }
 

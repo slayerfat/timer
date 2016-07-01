@@ -5,10 +5,11 @@ class Sound {
   /**
    * We need to know which command to run.
    *
-   * @param {string} command
+   * @param {Object} options
+   * @param {string} options.command
    */
-  constructor({command}) {
-    this.command = command;
+  constructor(options) {
+    this.command = options.command;
     this.exec = execFile;
 
     // The location of the default sounds.
