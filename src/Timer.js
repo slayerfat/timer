@@ -17,7 +17,7 @@ class Timer {
     const {progress, end, quote, start = 0} = options;
     this.sound = options.sound;
     this.progress = progress;
-    this.quote = quote;
+    this.quoter = quote;
     this.startTime = start;
     this.goal = end;
     this.interval = CONSTANTS.SEC;
@@ -43,6 +43,16 @@ class Timer {
     }
 
     return `${Timer.time()} El objetivo es es de ${this.goal / (60 * this.interval)} minutos.`;
+  }
+
+  /**
+   * Returns a quote or empty string.
+   *
+   * @returns {string}
+   * @private
+   */
+  get _quote() {
+    return this._tryToQuote();
   }
 
   logObjective() {
@@ -103,7 +113,6 @@ class Timer {
    * @private
    */
   _everyMin() {
-    this._tryToQuote();
     this._newBarTick();
   }
 
@@ -132,19 +141,26 @@ class Timer {
    */
   _newBarTick(msg) {
     msg = msg || this.msg;
-    this.progress.tick(this.startTime, {'msg': msg});
+    this.progress.tick(this.startTime, {'msg': `${msg} ${this._quote}`});
   }
 
   /**
    * Will try to log a random quote.
    *
+   * @param {boolean=} logIt
    * @private
    */
-  _tryToQuote() {
-    const i = Math.random() * 0.6;
-    if (i >= 0.5) {
-      console.log(chalk.blue(`\n${this.quote.random()}\n`));
+  _tryToQuote(logIt) {
+    let msg = '';
+    if (Math.random() * 0.6 >= 0.5) {
+      msg = this.quoter.random();
+
+      if (logIt) {
+        console.log(chalk.blue(`\n${msg}\n`));
+      }
     }
+
+    return msg;
   }
 
   /**
