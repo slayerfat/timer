@@ -1,7 +1,5 @@
 const chalk = require('chalk');
-
-const MIN = 6e4;
-const SEC = 1e3;
+const CONSTANTS = require('./constants');
 
 class Timer {
 
@@ -22,7 +20,7 @@ class Timer {
     this.quote = quote;
     this.startTime = start;
     this.goal = end;
-    this.interval = SEC;
+    this.interval = CONSTANTS.SEC;
     this.intFunc = null;
     this._misc();
   }
@@ -58,9 +56,9 @@ class Timer {
     this.intFunc = setInterval(() => {
       this.startTime += this.interval;
 
-      if (this.startTime % MIN === 0) {
+      if (this.startTime % CONSTANTS.MIN === 0) {
         this._everyMin();
-      } else if (this.startTime % (MIN * 10) === 0) {
+      } else if (this.startTime % (CONSTANTS.MIN * 10) === 0) {
         this._everyTMin();
       } else if (this.startTime >= this.goal) {
         this._done();
