@@ -39,6 +39,22 @@ describe('Timer', function () {
     });
   });
 
+  describe('accumulated time should tell the correct amount', function () {
+    it('should acknowledge 0 minutes', function () {
+      expect(timer.accumulatedMins).toBe(0);
+    });
+
+    it('should acknowledge 1 minutes', function () {
+      timer.startTime = CONSTANTS.MIN;
+      expect(timer.accumulatedMins).toBe(1);
+    });
+
+    it('should acknowledge 15 minutes', function () {
+      timer.startTime = CONSTANTS.MIN * 15;
+      expect(timer.accumulatedMins).toBe(15);
+    });
+  });
+
   describe('should tell me how many seconds have passed', function () {
     it('should tell me at the start that 0 minutes have passed', function () {
       expect(timer.msg).toContain('Han pasado 0 minutos');
@@ -53,6 +69,12 @@ describe('Timer', function () {
     it('should tell me 2 minute have passed after 2 minute', function () {
       timer.startTime = CONSTANTS.MIN * 2;
       expect(timer.msg).toContain('Han pasado 2 minutos');
+    });
+  });
+
+  describe('Timer.time function', function () {
+    it('should display correct format: [HH:mm:ss]', function () {
+      expect(Timer.time()).toMatch(/([\[])([[\d]{2})(:)([\d]{2})(:)([\d]{2})([\]])/);
     });
   });
 });
