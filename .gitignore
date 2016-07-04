@@ -6,4 +6,9 @@ node_modules/
 .classpath/
 *.launch
 .settings/
+
+
 /npm-debug.log
+
+# istanbul
+coverage/
