@@ -10,42 +10,32 @@ class Timer {
    * @param {Sound} options.sound
    * @param {Object} options.progress
    * @param {Quote} options.quote
-   * @param {number} options.end
-   * @param {number=} options.start
-   * @param {number=} options.divisor
-   * @param {number=} options.divisor
+   * @param {Time} options.time
    */
   constructor(options) {
-    const {progress, end, quote, start = 0, divisor = CONSTANTS.MIN, interval = CONSTANTS.SEC} = options;
+    const {progress, quote, time} = options;
     this.sound = options.sound;
     this.progress = progress;
     this.quoter = quote;
-    this.startTime = start;
-    this.goal = end;
-    this.interval = interval;
+    this.time = time;
     this.intFunc = null;
-    this.divisor = divisor;
     this._misc();
   }
 
-  get accumulatedMins() {
-    return this.startTime / (this.interval * 60);
-  }
-
   get msg() {
-    if (this.accumulatedMins === 1) {
-      return `${Timer.time()} Ha pasado ${Math.ceil(this.accumulatedMins)} minuto.`;
+    if (this.time.accumulatedMins === 1) {
+      return `${Timer.time()} Ha pasado ${Math.ceil(this.time.accumulatedMins)} minuto.`;
     }
 
-    return `${Timer.time()} Han pasado ${Math.ceil(this.accumulatedMins)} minutos.`;
+    return `${Timer.time()} Han pasado ${Math.ceil(this.time.accumulatedMins)} minutos.`;
   }
 
   get objective() {
-    if (this.accumulatedMins === 1) {
-      return `${Timer.time()} El objetivo es es de ${this.goal / (60 * this.interval)} minuto.`;
+    if (this.time.accumulatedMins === 1) {
+      return `${Timer.time()} El objetivo es es de ${this.time.goal / (60 * this.time.interval)} minuto.`;
     }
 
-    return `${Timer.time()} El objetivo es es de ${this.goal / (60 * this.interval)} minutos.`;
+    return `${Timer.time()} El objetivo es es de ${this.time.goal / (60 * this.time.interval)} minutos.`;
   }
 
   /**
@@ -63,22 +53,22 @@ class Timer {
   }
 
   /**
-   * Starts the interval, defaults to this.interval.
+   * Starts the interval, defaults to this.time.interval.
    */
   start() {
     this.intFunc = setInterval(() => {
-      this.startTime += this.interval;
+      this.time.start += this.time.interval;
 
-      if (this.startTime % this.divisor === 0) {
+      if (this.time.start % this.divisor === 0) {
         this._everyMin();
-      } else if (this.startTime % (this.divisor * 10) === 0) {
+      } else if (this.time.start % (this.divisor * 10) === 0) {
         this._everyTMin();
       }
 
-      if (this.startTime >= this.goal) {
+      if (this.time.start >= this.time.goal) {
         this._done();
       }
-    }, this.interval);
+    }, this.time.interval);
   }
 
   /**
@@ -93,7 +83,7 @@ class Timer {
    * tell how many minutes were left.
    */
   _exit() {
-    const mins = (this.goal - this.startTime) / (60 * this.interval);
+    const mins = (this.time.goal - this.time.start) / (60 * this.time.interval);
     const msg = `\n${Timer.time()} Faltaron ${Math.ceil(mins)} minutos.\n`;
 
     this.sound.error().catch(Timer._handleError);
@@ -146,7 +136,7 @@ class Timer {
    */
   _newBarTick(msg) {
     msg = msg || this.msg;
-    this.progress.tick(this.interval, {'msg': `${msg} ${this._quote}`});
+    this.progress.tick(this.time.interval, {'msg': `${msg} ${this._quote}`});
   }
 
   /**
