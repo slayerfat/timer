@@ -12,16 +12,19 @@ class Timer {
    * @param {Quote} options.quote
    * @param {number} options.end
    * @param {number=} options.start
+   * @param {number=} options.divisor
+   * @param {number=} options.divisor
    */
   constructor(options) {
-    const {progress, end, quote, start = 0} = options;
+    const {progress, end, quote, start = 0, divisor = CONSTANTS.MIN, interval = CONSTANTS.SEC} = options;
     this.sound = options.sound;
     this.progress = progress;
     this.quoter = quote;
     this.startTime = start;
     this.goal = end;
-    this.interval = CONSTANTS.SEC;
+    this.interval = interval;
     this.intFunc = null;
+    this.divisor = divisor;
     this._misc();
   }
 
@@ -66,11 +69,13 @@ class Timer {
     this.intFunc = setInterval(() => {
       this.startTime += this.interval;
 
-      if (this.startTime % CONSTANTS.MIN === 0) {
+      if (this.startTime % this.divisor === 0) {
         this._everyMin();
-      } else if (this.startTime % (CONSTANTS.MIN * 10) === 0) {
+      } else if (this.startTime % (this.divisor * 10) === 0) {
         this._everyTMin();
-      } else if (this.startTime >= this.goal) {
+      }
+
+      if (this.startTime >= this.goal) {
         this._done();
       }
     }, this.interval);
@@ -141,7 +146,7 @@ class Timer {
    */
   _newBarTick(msg) {
     msg = msg || this.msg;
-    this.progress.tick(this.startTime, {'msg': `${msg} ${this._quote}`});
+    this.progress.tick(this.interval, {'msg': `${msg} ${this._quote}`});
   }
 
   /**
