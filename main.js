@@ -1,3 +1,5 @@
+'use strict';
+
 const Timer = require('./src/Timer');
 const Sound = require('./src/Sound');
 const Quote = require('./src/Quote');

@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = Object.freeze({
   HOUR: 36e5,
   HALF: 18e5,

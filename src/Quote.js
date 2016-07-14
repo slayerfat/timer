@@ -1,3 +1,5 @@
+'use strict';
+
 class Quote {
   constructor() {
     this.messages = [
