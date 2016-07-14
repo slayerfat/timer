@@ -1,5 +1,4 @@
 const chalk = require('chalk');
-const CONSTANTS = require('./constants');
 
 class Timer {
 
@@ -59,9 +58,9 @@ class Timer {
     this.intFunc = setInterval(() => {
       this.time.start += this.time.interval;
 
-      if (this.time.start % this.divisor === 0) {
+      if (this.time.start % this.time.divisor === 0) {
         this._everyMin();
-      } else if (this.time.start % (this.divisor * 10) === 0) {
+      } else if (this.time.start % (this.time.divisor * 10) === 0) {
         this._everyTMin();
       }
 
