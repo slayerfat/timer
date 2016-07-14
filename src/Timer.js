@@ -58,15 +58,15 @@ class Timer {
    */
   start() {
     this.intFunc = setInterval(() => {
-      this.time.start += this.time.interval;
+      this.time.add();
 
-      if (this.time.start % this.time.divisor === 0) {
+      if (this.time.isTime()) {
         this._everyMin();
-      } else if (this.time.start % (this.time.divisor * 10) === 0) {
+      } else if (this.time.isTime(10)) {
         this._everyTMin();
       }
 
-      if (this.time.start >= this.time.goal) {
+      if (this.time.accumulated >= this.time.goal) {
         this._done();
       }
     }, this.time.interval);
@@ -137,7 +137,7 @@ class Timer {
    */
   _newBarTick(msg) {
     msg = msg || this.msg;
-    this.progress.tick(this.time.interval, {'msg': `${msg} ${this._quote}`});
+    this.progress.tick(this.time.divisor, {'msg': `${msg} ${this._quote}`});
   }
 
   /**
